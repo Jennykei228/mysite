@@ -227,4 +227,30 @@ $(document).ready(function () {
         container.prepend(copyButton);
       });
   }
+  
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize AOS
+  AOS.init({
+    duration: 800,
+    once: true
+  });
+  
+  // Initialize Swiper
+  if (document.querySelector('.swiper-container')) {
+    new Swiper('.swiper-container', {
+      slidesPerView: 1,
+      spaceBetween: 30,
+      loop: true,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      }
+    });
+  }
 });

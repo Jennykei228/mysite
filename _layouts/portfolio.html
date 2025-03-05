@@ -1,0 +1,25 @@
+---
+layout: default
+---
+
+<div class="portfolio-container">
+  <div class="portfolio-header">
+    <h1>{{ page.title }}</h1>
+    {{ content }}
+  </div>
+  
+  <div class="portfolio-gallery">
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        {% for image in page.gallery %}
+        <div class="swiper-slide">
+          <img src="{{ image.url | relative_url }}" alt="{{ image.alt }}">
+        </div>
+        {% endfor %}
+      </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+  </div>
+</div>

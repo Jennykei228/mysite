@@ -1,0 +1,113 @@
+---
+layout: default
+---
+
+<div class="banner" style="margin-top: 1em; background-image: url('{{ page.header.image | default: '/assets/images/header-image.jpg' | relative_url }}');">
+  <div class="banner-overlay"></div>
+  <div class="banner-content">
+    <h1 class="animate-title">{{ page.title | default: "My Portfolio" }}</h1>
+    <p class="animate-subtitle">{{ page.subtitle | default: "A collection of my creative works and projects" }}</p>
+  </div>
+</div>
+
+<div id="main" class="layout--{{ page.layout | default: layout.layout }}{% if page.classes or layout.classes %}{{ page.classes | default: layout.classes | join: ' ' | prepend: ' ' }}{% endif %}">
+  {% if page.author_profile or layout.author_profile or page.sidebar %}
+    <div class="sidebar sticky">
+      {% if page.author_profile or layout.author_profile %}{% include author-profile.html %}{% endif %}
+      {% if page.sidebar %}
+        {% for s in page.sidebar %}
+          {% if s.image %}
+            <img src="{{ s.image | relative_url }}"
+                 alt="{% if s.image_alt %}{{ s.image_alt }}{% endif %}">
+          {% endif %}
+          {% if s.title %}<h3>{{ s.title }}</h3>{% endif %}
+          {% if s.text %}{{ s.text | markdownify }}{% endif %}
+        {% endfor %}
+        {% if page.sidebar.nav %}
+          {% include nav_list nav=page.sidebar.nav %}
+        {% endif %}
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="archive">
+    {{ content }}
+    
+    <div class="gallery-grid">
+      {% for project in site.portfolio %}
+        <div class="gallery-item" data-aos="fade-up">
+          <a href="{{ project.url | relative_url }}" class="gallery-link" data-modal-target="#gallery-modal" data-modal-title="{{ project.title }}" data-modal-description="{{ project.excerpt }}" data-modal-image="{{ project.header.image | relative_url }}">
+            <div class="gallery-image">
+              <img src="{{ project.header.image | relative_url }}" alt="{{ project.title }}">
+            </div>
+            <div class="gallery-overlay">
+              <h3>{{ project.title }}</h3>
+              <p>{{ project.excerpt }}</p>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="gallery-modal" class="modal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <div class="modal-image-container">
+      <img id="modal-image" src="" alt="">
+    </div>
+    <div class="modal-text">
+      <h3 id="modal-title"></h3>
+      <p id="modal-description"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Modal functionality
+const modal = document.getElementById('gallery-modal');
+const modalImage = document.getElementById('modal-image');
+const modalTitle = document.getElementById('modal-title');
+const modalDescription = document.getElementById('modal-description');
+
+// Open modal
+document.querySelectorAll('.gallery-link').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    // Set modal content
+    modalImage.src = this.dataset.modalImage;
+    modalTitle.textContent = this.dataset.modalTitle;
+    modalDescription.textContent = this.dataset.modalDescription;
+    
+    // Show modal
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+  });
+});
+
+// Close modal
+modal.querySelector('.close-modal').addEventListener('click', () => {
+  modal.classList.remove('open');
+  document.body.style.overflow = ''; // Restore scrolling
+});
+
+// Close modal when clicking outside
+modal.addEventListener('click', (e) => {
+  if (e.target === modal || e.target.classList.contains('modal-overlay')) {
+    modal.classList.remove('open');
+    document.body.style.overflow = ''; // Restore scrolling
+  }
+});
+
+// Close modal with ESC key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && modal.classList.contains('open')) {
+    modal.classList.remove('open');
+    document.body.style.overflow = ''; // Restore scrolling
+  }
+});
+</script>
